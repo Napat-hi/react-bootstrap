@@ -1,38 +1,244 @@
-.App {
+#button {
+  color: #fff;
+  background-color: #000000;
+  border-color: #000000;
+  box-shadow: 0 0 0 .2rem rgba(38, 143, 255, .5);
+}
+
+#avaterimg {
+
+  border: 4px solid black;
+  border-radius: 50%;
+  padding: 5px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+
+}
+
+#table,
+td {
+  border: 1px solid black;
+  width: 10%;
+}
+
+.Mytable {
+
+  align-items: stretch;
+  width: 100%;
+  height: 20px;
+  grid-area: table;
+}
+
+th,
+td {
+  padding: 15px;
+}
+
+
+
+.body {
+  margin: 0;
+  box-sizing: border-box;
+  width: auto;
+}
+
+#gamesss {
+  margin: 10vh;
+  padding: 5vh;
+}
+
+.login {
+  display: flex;
+  margin: 20vh 20vh 0 20vh;
+  /* Adjust the top margin to 0 */
+
   text-align: center;
+  padding: 5vh;
+  color: rgb(255, 255, 255);
+  /* fallback for old browsers */
+  background: #6a11cb;
+
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.container {
+
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #ffffff;
+
+
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.container2 {
+  display: center;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  background-color: rgba(132, 40, 197, 0.637)
+}
+
+
+
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  margin-left: 30%;
+}
+
+.Card2{
+  display: flex;
+  
+  margin-top: 50px;
+  
+}
+
+.Card3{
+  display: flex;
+  margin-left: 30%;
+  margin-top: 50px;
+  
+}
+
+.Card4{
+  display: flex;
+  margin-left: 45%;
+  margin-top: 50px;
+  
+}
+
+
+.Card5{
+  display: flex;
+  margin-left: 60%;
+  margin-top: 50px;
+  
+}
+
+
+.Card6{
+  display: flex;
+ 
+  margin-top: 50px;
+  
+}
+.left {
+  display: flex;
+  justify-content: left;
+  left: 0px;
+}
+
+.content1 {
+  grid-area: content1;
+  
+  height: 100%;
+  width: 100%;
+  background-color: #E7E9EB;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.content2 {
+  grid-area: content2;
+  background-color: rgb(23, 123, 66);
+}
+
+.content3 {
+  grid-area: content3;
+  background-color: rgb(255, 0, 0);
+}
+
+.content4 {
+  grid-area: content4;
+  background-color: rgb(27, 225, 80);
+}
+
+.content5 {
+  grid-area: content5;
+ 
+  height: 80px;
+  
+
+}
+
+
+
+
+@media only screen and (min-width: 768px) {
+  .layout {
+      width: 100%;
+      height: 100vh;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: 1fr 5fr 5fr;
+      grid-template-areas:
+          'content5 content5 content5 content5 content5'
+          'content1 table table table table'
+          'content1 table table table table'
+
+
+
+
+  }
+
+}
+
+.layout1 {
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-template-rows: 1fr 4fr 4fr 4fr;
+  grid-template-areas:
+      'content4'
+      'content4'
+      'content4'
+      'content4'
+
+
+}
+
+.button-web{
+  position: relative;
+  padding: 2px 15px 1px 40px;
+  width: 100%;
+}
+
+@media (max-width: 992px) {
+  #sidenav h2 {
+      font-size: 26px;
+      width: 100%;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.vertical ex{
+  float: left;
+  width: 100%;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: #f1f1f1;
+}
+
+.color-text{
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.chart{
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+ 
 }
