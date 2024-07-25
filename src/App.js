@@ -10,6 +10,9 @@ import { Bar } from 'react-chartjs-2'
 import { CDBContainer } from 'cdbreact';
 import { Radar } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
 
 
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
@@ -19,7 +22,6 @@ import Card from 'react-bootstrap/Card';
 import CardGroup from 'react-bootstrap/CardGroup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import InputGroup from 'react-bootstrap/InputGroup';
-import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { Line } from 'react-chartjs-2';
@@ -33,7 +35,7 @@ import './App.css';
 import "leaflet/dist/leaflet.css";
 import { Container } from 'react-bootstrap';
 import moment from 'moment'
-
+import { Modal } from 'react-bootstrap';
 
 
 let sortOrder = 0;
@@ -70,29 +72,6 @@ export default function App() {
         ],
     });
 
-    const useMountEffect = (fun) => useEffect(fun, [])(() => {
-        setInterval(function () {
-            var oldDataSet = data.datasets[0];
-            var newData = [];
-
-            for (var x = 0; x < data.labels.length; x++) {
-                newData.push(Math.floor(Math.random() * 100));
-            }
-
-            var newDataSet = {
-                ...oldDataSet,
-            };
-
-            newDataSet.data = newData;
-
-            var newState = {
-                ...data,
-                datasets: [newDataSet],
-            };
-
-            setData(newState);
-        }, 5000);
-    });
 
 
     const [mainTable, setMainTable] = useState("main_1");
@@ -103,15 +82,21 @@ export default function App() {
     const [lastnames, setLastNames] = useState('');
     const [photo, setPhoto] = useState('');
     const [filter, setFilter] = useState('');
-    const [filters, setFilters] = useState('');
-    const [filterss, setFilterss] = useState('');
+    const [modoles, setModoles] = useState('');
+
     const [Employee, setEmployee] = useState([]);
+    const [Employeess, setEmployeess] = useState([]);
+    const [StartDate, setStartDate] = useState('');
+    const [EndDate, setEndDate] = useState('');
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
     // var GBP = Employee.filter(obj => obj.DocCurrency === "GBP" )
     // var EUR = Employee.filter(obj => obj.DocCurrency === "EUR" )
     // var USD = Employee.filter(obj => obj.DocCurrency === "USD" )
     // var Employees = Employeess.filter(obj => obj.FirstName !== "Humanica" && obj.LastName !== "*")
-    var uniqueEmployees = [...new Set(Employee.map(o => (o.CardName)))]
-    console.log("empolyee", uniqueEmployees)
+
     // console.log("GBP", GBP) 
     // console.log("EUR", EUR)
     // console.log("USD", USD)
@@ -129,23 +114,24 @@ export default function App() {
     // [length, length, length]
     var finalresult = []
 
-    uniqueEmployees.forEach(e => {
+    Employeess.forEach(e => {
         var x = Employee.filter(obj => obj.CardName === e).map(obj => obj.DocTotalSys)
         finalresult.push(x)
     })
     var finalresults = []
 
-    uniqueEmployees.forEach(e => {
+    Employeess.forEach(e => {
         var x = Employee.filter(obj => obj.CardName === e).map(obj => obj.DocTotalSys - obj.VatSum)
         finalresults.push(x)
     })
-    
+
 
     const newArr = finalresult.flat();
     const newArrs = finalresults.flat();
 
+
     const data = {
-        labels: ["Microchips", "Earthshaker Corporation", "Mashina Corporation","SG Electronics", "ADA Technologies", "Aquent Systems","Maxi-Teq"],
+        labels: ["Microchips", "Earthshaker Corporation", "Mashina Corporation", "SG Electronics", "ADA Technologies", "Aquent Systems", "Maxi-Teq"],
         datasets: [
             {
                 label: 'Price(In Tax)',
@@ -670,7 +656,6 @@ export default function App() {
                                             "Incoterms": 0,
                                             "TransportMode": 0,
                                             "NatureOfTransaction": null,
-                                            "DestinationCountryForImport": null,
                                             "DestinationRegionForImport": null,
                                             "OriginCountryForExport": null,
                                             "OriginRegionForExport": null,
@@ -22065,7 +22050,7 @@ export default function App() {
         }
         setFirstNames(Employee[0].DocTotalSys); // Update the first name state with the first name of the sorted list
         sortOrder++;
-    }   
+    }
     function sortFunction5() {
         if (sortOrder % 2 === 0) {
             Employee.sort((a, b) => a.VatSum.toString().localeCompare(b.VatSum.toString()));
@@ -22093,7 +22078,15 @@ export default function App() {
         setLastNames(Employee[0].DocDate.toString()); // Update the first name state with the first name of the sorted list
         sortOrder++;
     }
-
+    function sortFunction() {
+        if (sortOrder % 2 === 0) {
+            Employee.sort((a, b) => a.DocEntry - b.DocEntry);
+        } else {
+            Employee.sort((a, b) => b.DocEntry - a.DocEntry);
+        }
+        setFirstNames(Employee[0].DocEntry); // Update the first name state with the first name of the sorted list
+        sortOrder++;
+    }
 
 
 
@@ -22110,13 +22103,18 @@ export default function App() {
                 <div className="layout text-2xl text-white">
 
                     <div className="content5">
-                        <Content5 firstnames={firstnames} lastnames={lastnames} />
+                        <Content5 firstnames={"Account"} />
                     </div>
                     <div className="content1">
                         <ListGroup>
 
                             <ListGroup.Item onClick={() => setMainTable('main_1')} action variant={mainTable === 'main_1' ? 'primary' : 'secondary'} >Home</ListGroup.Item>
-                            <ListGroup.Item onClick={() => setMainTable('main_2')} action variant={mainTable === 'main_2' ? 'primary' : 'secondary'}>Chart</ListGroup.Item>
+                            <ListGroup.Item onClick={() => {
+                                setMainTable('main_2')
+                                var uniqueEmployees = [...new Set(Employee.map(o => (o.CardName)))]
+                                console.log("empolyee", uniqueEmployees)
+                                setEmployeess(uniqueEmployees)
+                            }} action variant={mainTable === 'main_2' ? 'primary' : 'secondary'}>Chart</ListGroup.Item>
                             <ListGroup.Item onClick={() => setMainTable('main_3')} action variant={mainTable === 'main_3' ? 'primary' : 'secondary'}>About</ListGroup.Item>
                             <ListGroup.Item onClick={() => setMainTable('main_4')} action variant={mainTable === 'main_4' ? 'primary' : 'secondary'}>Table</ListGroup.Item>
                             <ListGroup.Item onClick={() => setMainTable('main_5')} action variant={mainTable === 'main_5' ? 'primary' : 'secondary'}>Map</ListGroup.Item>
@@ -22132,25 +22130,58 @@ export default function App() {
 
                             <div className="Mytable">
                                 <InputGroup className="mb-3">
-                                    <InputGroup.Text className=".bg-light.bg-gradient">Global sreach</InputGroup.Text>
-                                    Search : {' '}
-                                    <Form.Control value={filterss || ''} onChange={(e) => setFilterss(e.target.value)} />
+                                    <InputGroup.Text className="bg-light bg-gradient" style={{ marginTop: 10 }}>Global search</InputGroup.Text>
+                                    S: {' '}
+                                    <Form.Control value={filter || ''}
+                                        onChange={(e) =>
+                                            setFilter(e.target.value)}
+                                        style={{ marginTop: 10 }}
+                                    />
                                 </InputGroup>
                                 <InputGroup className="mb-3">
-                                    <InputGroup.Text className=".bg-light.bg-gradient">First name and last name</InputGroup.Text>
-                                    Search : {' '}
-                                    <Form.Control value={filter || ''} onChange={(e) => setFilter(e.target.value)} />
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <Form.Group controlId="duedate">
+                                                <Form.Control
+                                                    type="date"
+                                                    name="duedate"
+                                                    placeholder="Due date"
+                                                    defaultValue="2017-09-17"
+                                                    onChange={(e) => {
+                                                        setStartDate(e.target.value)
 
-                                    Search : {' '}
-                                    <Form.Control value={filters || ''} onChange={(e) => setFilters(e.target.value)} />
+                                                    }}
+                                                />
+
+                                            </Form.Group>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <Form.Group controlId="duedate">
+                                                <Form.Control type="date"
+                                                    name="duedate"
+                                                    placeholder="Due date"
+                                                    defaultValue="2020-03-04"
+                                                    onChange={(e) => {
+                                                        setEndDate(e.target.value)
+
+
+                                                    }} />
+
+
+                                            </Form.Group>
+
+                                        </div>
+                                    </div>
+
                                 </InputGroup>
 
 
-                                <Table striped bordered hover variant="white" >
+                                <Table striped bordered hover variant="white">
                                     <thead>
-
                                         <tr>
-                                            <th className="text-center" onClick={() => sortFunction2('id')}># </th>
+                                            <th className="text-center" onClick={() => sortFunction('id')}># </th>
                                             <th className="text-center" onClick={() => sortFunction2('first_name')}>
                                                 Company {sortOrder % 2 ? <FontAwesomeIcon icon={faArrowUp} /> : <FontAwesomeIcon icon={faArrowDown} />}
                                             </th>
@@ -22168,12 +22199,48 @@ export default function App() {
                                     </thead>
                                     <tbody>
                                         {Employee
+                                            .filter((item) => {
+
+                                                // console.log("StartDate.getTime()",StartDate)
+                                                // console.log("EndDate.getTime()",EndDate)
 
 
+                                                return filter.toLowerCase() === '' ? item : item.CardName.toLowerCase().includes(filter.toLowerCase())
+                                            })
+                                            .filter((item) => {
+
+                                                if (StartDate && EndDate) {
+                                                    var sd = new Date(StartDate)
+                                                    var ed = new Date(EndDate)
+                                                    var dd = new Date(item.DocDate)
+                                                    // console.log(' check StartDate' ,new Date(StartDate))
+                                                    // console.log('check item.DocDate' , new Date(item.DocDate))
+
+                                                    return dd >= sd && dd <= ed
+                                                    // || item.DocDate.getTime() >= StartDate.getTime() 
+                                                    // ||item.UpdateDate.getTime() <= EndDate.getTime();
+                                                } else {
+                                                    return true
+                                                }
+
+                                            })
                                             .map((e, index) => (
 
-                                                <tr key={e.id}>
-                                                    <td>{e.DocEntry}</td>
+                                                <tr key={"myTable" + index}
+                                                >
+                                                    <td>{e.DocEntry}{'. '}
+                                                        <>
+                                                            <Button variant="light" onClick={(event, i) => {
+                                                                console.log('module', e)
+                                                                setModoles(e)
+                                                                handleShow()
+                                                            }}>
+                                                                Launch
+                                                            </Button>
+
+
+                                                        </>
+                                                    </td>
                                                     <td>{e.CardName}</td>
                                                     <td>{moment(new Date(e.DocDate)).format('l')}</td>
                                                     <td>{moment(new Date(e.UpdateDate)).format('l')}</td>
@@ -22219,7 +22286,7 @@ export default function App() {
                                         </Card>
                                         <CardGroup>
                                             {listData.map((e, index) => (
-                                                <Card className="Card2" style={{ width: '8rem' }}>
+                                                <Card key={"mycard" + index} className="Card2" style={{ width: '8rem' }}>
                                                     <Card.Img onClick={() => {
 
                                                         setFirstNames(e.first_name)
@@ -22245,9 +22312,27 @@ export default function App() {
                                         <div className="Mytable">
 
                                             <ButtonGroup aria-label="Basic example">
-                                                <Button onClick={() => setchart('Bar_chart')} action variant={chart === 'Bar_chart' ? 'info' : 'light'} style={{ top: "10px" }}>Bar chart</Button>
-                                                <Button onClick={() => setchart('line_chart')} action variant={chart === 'line_chart' ? 'info' : 'light'} style={{ top: "10px" }}>Line chart</Button>
-                                                <Button onClick={() => setchart('pie_chart')} action variant={chart === 'pie_chart' ? 'info' : 'light'} style={{ top: "10px" }}>Radar chart</Button>
+                                                <Button onClick={() => {
+
+                                                    setchart('Bar_chart')
+                                                    var uniqueEmployees = [...new Set(Employee.map(o => (o.CardName)))]
+                                                    console.log("empolyee", uniqueEmployees)
+                                                    setEmployeess(uniqueEmployees)
+                                                }} action variant={chart === 'Bar_chart' ? 'info' : 'light'} style={{ top: "10px" }}>Bar chart</Button>
+                                                <Button onClick={() => {
+
+                                                    setchart('line_chart')
+                                                    var uniqueEmployees = [...new Set(Employee.map(o => (o.CardName)))]
+                                                    console.log("empolyee", uniqueEmployees)
+                                                    setEmployeess(uniqueEmployees)
+                                                }} action variant={chart === 'line_chart' ? 'info' : 'light'} style={{ top: "10px" }}>Line chart</Button>
+                                                <Button onClick={() => {
+
+                                                    setchart('pie_chart')
+                                                    var uniqueEmployees = [...new Set(Employee.map(o => (o.CardName)))]
+                                                    console.log("empolyee", uniqueEmployees)
+                                                    setEmployeess(uniqueEmployees)
+                                                }} action variant={chart === 'pie_chart' ? 'info' : 'light'} style={{ top: "10px" }}>Radar chart</Button>
                                             </ButtonGroup>
                                             {
                                                 chart === 'Bar_chart' ?
@@ -22273,6 +22358,154 @@ export default function App() {
                     }
                 </div>
             </section>
+
+
+            <Modal
+                show={show}
+                onHide={handleClose}
+                backdrop="static"
+                keyboard={false}
+                size="lg"
+
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Show Case</Modal.Title>
+                </Modal.Header>
+                <div className="layout2">
+                    <Modal.Body>
+                        <Form>
+                            <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+                                <Form.Label column sm={2}>
+                                    Doc Number:
+                                </Form.Label>
+                                <Col sm={2}>
+                                    <Form.Control type="show" value={modoles.DocEntry} disabled="true" />
+                                </Col>
+
+                                <Form.Label column sm={2}>
+                                    Total:
+                                </Form.Label>
+                                <Col sm={3}>
+                                    <Form.Control type="show" value={modoles.DocTotalSys} disabled="true" />
+                                </Col>
+                            </Form.Group>
+
+
+                            <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+                                <Form.Label column sm={2}>
+                                    Posting Date:
+                                </Form.Label>
+                                <Col sm={2}>
+                                    <Form.Control type="show" value={moment(new Date(modoles.DocDate)).format('l')} disabled="true" />
+                                </Col>
+
+                                <Form.Label column sm={2}>
+                                    Due Date:
+                                </Form.Label>
+                                <Col sm={3}>
+                                    <Form.Control type="show" value={moment(new Date(modoles.UpdateDate)).format('l')} disabled="true" />
+                                </Col>
+                            </Form.Group>
+
+                            <br />
+                            <Form.Group as={Row} className="55555 mb-3" controlId="formHorizontalEmail">
+                                <Form.Label column sm={2}>
+                                    BP Address:
+                                </Form.Label>
+                                <Col sm={2}>
+                                    <Form.Control type="show" value={modoles.PayToCode} disabled="false" />
+                                </Col>
+                                <Form.Label column sm={2}>
+                                    BP Address:
+                                </Form.Label>
+                                <Col sm={3}>
+                                    <Form.Control type="show" value={modoles.ShipToCode} disabled="true" />
+                                </Col>
+                            </Form.Group>
+
+                            <Form.Group as={Row} className="55555 mb-3" controlId="formHorizontalEmail">
+                                <Form.Label column sm={2}>
+                                    Address Summary:
+                                </Form.Label>
+                                <Col sm={2}>
+                                    <Form.Control type="show" value={modoles.Address2} disabled="false" />
+                                </Col>
+                                <Form.Label column sm={2}>
+                                    Address Summary:
+                                </Form.Label>
+                                <Col sm={3}>
+
+                                    <Form.Control type="show" value={modoles.Address} disabled="true" />
+                                </Col>
+                            </Form.Group>
+
+
+                        </Form>
+                        <div className="Mytable1">
+                            <Table striped bordered hover variant="white">
+                                <thead>
+                                    <tr>
+                                        <th className="text-center"># </th>
+                                        
+                                        <th className="text-center">
+                                            Item No.
+                                        </th>
+                                        <th className="text-center" >Item Description
+                                        </th>
+                                        <th className="text-center">Quantity
+                                        </th>
+                                        <th className="text-center"> Total(Doc)
+                                        </th>
+                                        <th className="text-center"> UOM Code
+                                        </th>
+                                        <th className="text-center"> Total(Ex Tax)
+                                        </th>
+                                        <th className="text-center"> Total(In Tax)
+                                        </th>
+                                        <th className="text-center"> TaxTotal
+                                        </th>
+                                        <th className="text-center"> Unit Price
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    {modoles?.DocumentLines?.map((item, index) => {
+
+                                        return (
+                                            <tr key={"myTable"}>
+                                                <td>{modoles.Series}{'. '}
+
+                                                </td>
+                                               
+                                                <td>{item.ItemCode}</td>
+                                                <td>{item.ItemDescription}</td>
+                                                <td>{item.Quantity}</td>
+                                                <td>{item.Currency + item.Price}</td>
+                                                <td>{(item.UoMCode)}</td>
+                                                <td>{item.Price}</td>
+                                                <td>{item.PriceAfterVAT}</td>
+                                                <td>{item.TaxTotal}</td>
+                                                <td>{(item.UnitPrice)}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+
+                                </tbody>
+
+                            </Table>
+                        </div>
+                    </Modal.Body>
+                </div>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={handleClose}>Understood</Button>
+                </Modal.Footer>
+            </Modal>
 
         </React.Fragment>
 
