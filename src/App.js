@@ -13,6 +13,8 @@ import Chart from 'chart.js/auto';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import Image from 'react-bootstrap/Image';
+
 
 
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
@@ -81,17 +83,23 @@ export default function App() {
     const [firstnames, setFirstNames] = useState('');
     const [lastnames, setLastNames] = useState('');
     const [photo, setPhoto] = useState('');
+    const [email, setemail] = useState('');
+    const [id, setid] = useState('');
     const [filter, setFilter] = useState('');
     const [modoles, setModoles] = useState('');
+    const [modoles2, setModoles2] = useState('');
 
     const [Employee, setEmployee] = useState([]);
     const [Employeess, setEmployeess] = useState([]);
     const [StartDate, setStartDate] = useState('');
     const [EndDate, setEndDate] = useState('');
     const [show, setShow] = useState(false);
+    const [show1, setShow1] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const handleClose1 = () => setShow1(false);
+    const handleShow1 = () => setShow1(true);
     // var GBP = Employee.filter(obj => obj.DocCurrency === "GBP" )
     // var EUR = Employee.filter(obj => obj.DocCurrency === "EUR" )
     // var USD = Employee.filter(obj => obj.DocCurrency === "USD" )
@@ -22094,7 +22102,6 @@ export default function App() {
     return (
 
 
-
         <React.Fragment>
 
 
@@ -22231,7 +22238,6 @@ export default function App() {
                                                     <td>{e.DocEntry}{'. '}
                                                         <>
                                                             <Button variant="light" onClick={(event, i) => {
-                                                                console.log('module', e)
                                                                 setModoles(e)
                                                                 handleShow()
                                                             }}>
@@ -22257,8 +22263,8 @@ export default function App() {
 
                             </div>
                             : mainTable === 'main_5' ?
-                                <div className="Mytable">
-                                    <MapContainer center={[13.746443162866017, 100.52244136191749]} zoom={18} scrollWheelZoom={true} style={{ padding: '100px', height: '500px', width: '100%' }}>
+                                <div className="Mytable22">
+                                    <MapContainer center={[13.746443162866017, 100.52244136191749]} zoom={18} scrollWheelZoom={true} style={{ padding: '100px', height: '1000px', width: '100%' }}>
                                         <TileLayer
                                             url='https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
                                             maxZoom={20}
@@ -22288,10 +22294,14 @@ export default function App() {
                                             {listData.map((e, index) => (
                                                 <Card key={"mycard" + index} className="Card2" style={{ width: '8rem' }}>
                                                     <Card.Img onClick={() => {
-
+                                                        setid(e.id)
+                                                        setemail(e.email)
                                                         setFirstNames(e.first_name)
                                                         setLastNames(e.last_name)
                                                         setPhoto(e.avatar)
+                                                        setModoles2(e)
+                                                        handleShow1()
+
                                                     }}
                                                         variant="top" src={e.avatar} />
                                                     <Card.Body>
@@ -22359,6 +22369,70 @@ export default function App() {
                 </div>
             </section>
 
+            <Modal show={show1} onHide={handleClose1}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Modal heading</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    
+                        <div className='layout1'>
+                            <div className='layoutphoto'>
+                                <Image src={photo} rounded />
+                            </div>
+                            <div className='layoutName'>
+                                <Form>
+
+                                    <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+                                        <Form.Label column sm={2}>
+                                            ID:
+                                        </Form.Label>
+                                        <Col sm={5}>
+                                            <Form.Control type="show" value={id} disabled="true" />
+                                        </Col>
+                                    </Form.Group>
+
+                                    <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+
+                                        <Form.Label column sm={2}>
+                                            EMAIL:
+                                        </Form.Label>
+                                        <Col sm={10}>
+                                            <Form.Control type="show" value={email} disabled="true" />
+                                        </Col>
+                                    </Form.Group>
+
+
+                                    <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+                                        <Form.Label column sm={2}>
+                                            Name:
+                                        </Form.Label>
+                                        <Col sm={5}>
+                                            <Form.Control type="show" value={firstnames} disabled="true" />
+                                        </Col>
+                                    </Form.Group>
+                                    <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+
+                                        <Form.Label column sm={2}>
+                                            lastname:
+                                        </Form.Label>
+                                        <Col sm={5}>
+                                            <Form.Control type="show" value={lastnames} disabled="true" />
+                                        </Col>
+                                    </Form.Group>
+                                </Form>
+                            </div>
+                        </div>
+                   
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose1}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={handleClose1}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
 
             <Modal
                 show={show}
@@ -22373,6 +22447,7 @@ export default function App() {
                 </Modal.Header>
                 <div className="layout2">
                     <Modal.Body>
+
                         <Form>
                             <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
                                 <Form.Label column sm={2}>
@@ -22446,7 +22521,7 @@ export default function App() {
                                 <thead>
                                     <tr>
                                         <th className="text-center"># </th>
-                                        
+
                                         <th className="text-center">
                                             Item No.
                                         </th>
@@ -22478,7 +22553,7 @@ export default function App() {
                                                 <td>{modoles.Series}{'. '}
 
                                                 </td>
-                                               
+
                                                 <td>{item.ItemCode}</td>
                                                 <td>{item.ItemDescription}</td>
                                                 <td>{item.Quantity}</td>
@@ -22507,7 +22582,7 @@ export default function App() {
                 </Modal.Footer>
             </Modal>
 
-        </React.Fragment>
+        </React.Fragment >
 
 
     );
