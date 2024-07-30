@@ -22026,7 +22026,7 @@ export default function App() {
         setLastNames(Employee[0].CardName.toString()); // Update the first name state with the first name of the sorted list
         sortOrder++;
     }
-
+   
     // function sortFunction1() {
 
     //     if (sortOrder % 2 === 0) {
@@ -22041,15 +22041,15 @@ export default function App() {
     //     sortOrder++; 
 
     // }
-    function sortFunction3() {
-        if (sortOrder % 2 === 0) {
-            Employee.sort((a, b) => a.VatSum.toString().localeCompare(b.VatSum.toString()));
-        } else {
-            Employee.sort((a, b) => b.VatSum.toString().localeCompare(a.VatSum.toString()));
-        }
-        setLastNames(Employee[0].VatSum.toString()); // Update the first name state with the first name of the sorted list
-        sortOrder++;
-    }
+    // function sortFunction3() {
+    //     if (sortOrder % 2 === 0) {
+    //         Employee.sort((a, b) => a.VatSum.toString().localeCompare(b.VatSum.toString()));
+    //     } else {
+    //         Employee.sort((a, b) => b.VatSum.toString().localeCompare(a.VatSum.toString()));
+    //     }
+    //     setLastNames(Employee[0].VatSum.toString()); // Update the first name state with the first name of the sorted list
+    //     sortOrder++;
+    // }
     function sortFunction4() {
         if (sortOrder % 2 === 0) {
             Employee.sort((a, b) => (a.DocTotalSys - a.VatSum) - (b.DocTotalSys - b.VatSum));
